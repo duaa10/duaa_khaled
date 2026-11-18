@@ -676,38 +676,13 @@
                             <label class="block text-xs font-bold text-stone-700 mb-1">المحافظة:</label>
                             <select id="customer-province" onchange="updateCartTotals()" class="w-full px-3.5 py-2.5 bg-white border border-pink-200 rounded-xl text-sm focus:ring-2 focus:ring-pink-600 focus:outline-none transition-all">
                                 <option value="" data-fee="5000" selected disabled>اختر المحافظة</option>
-                                <option value="بابل" data-fee="5000">بابل (5,000 د.ع)</option>
-                                <option value="بغداد" data-fee="5000">بغداد (5,000 د.ع)</option>
-                                <option value="البصرة" data-fee="5000">البصرة (5,000 د.ع)</option>
-                                <option value="نينوى" data-fee="5000">نينوى (5,000 د.ع)</option>
-                                <option value="أربيل" data-fee="5000">أربيل (5,000 د.ع)</option>
-                                <option value="النجف" data-fee="5000">النجف (5,000 د.ع)</option>
-                                <option value="كربلاء" data-fee="5000">كربلاء (5,000 د.ع)</option>
-                                <option value="الأنبار" data-fee="5000">الأنبار (5,000 د.ع)</option>
-                                <option value="ديالى" data-fee="5000">ديالى (5,000 د.ع)</option>
-                                <option value="واسط" data-fee="5000">واسط (5,000 د.ع)</option>
-                                <option value="ميسان" data-fee="5000">ميسان (5,000 د.ع)</option>
-                                <option value="ذي قار" data-fee="3000">ذي قار (3,000 د.ع، الشطرة 2,000 د.ع)</option>
-                                <option value="المثنى" data-fee="5000">المثنى (5,000 د.ع)</option>
-                                <option value="القادسية" data-fee="5000">القادسية (5,000 د.ع)</option>
-                                <option value="صلاح الدين" data-fee="5000">صلاح الدين (5,000 د.ع)</option>
-                                <option value="كركوك" data-fee="5000">كركوك (5,000 د.ع)</option>
-                                <option value="دهوك" data-fee="5000">دهوك (5,000 د.ع)</option>
-                                <option value="السليمانية" data-fee="5000">السليمانية (5,000 د.ع)</option>
+                                <option value="ذي قار" data-fee="3000">ذي قار (3,000 د.ع)</option>
+                                <option value="الشطرة" data-fee="2000">الشطرة (2,000 د.ع)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-stone-700 mb-1">المنطقة / القضاء:</label>
-                            <input type="text" id="customer-area" list="thiqar-areas" placeholder="اسم المنطقة أو القضاء (الشطرة 2,000 د.ع، باقي ذي قار 3,000 د.ع)" oninput="updateCartTotals()" class="w-full px-3.5 py-2.5 bg-white border border-pink-200 rounded-xl text-sm focus:ring-2 focus:ring-pink-600 focus:outline-none transition-all">
-                            <datalist id="thiqar-areas">
-                                <option value="الناصرية"></option><option value="الشطرة"></option>
-                                <option value="سوق الشيوخ"></option><option value="الرفاعي"></option>
-                                <option value="قلعة سكر"></option><option value="الغراف"></option>
-                                <option value="الجبايش"></option><option value="الإصلاح"></option>
-                                <option value="الفهود"></option><option value="النصر"></option>
-                                <option value="الدواية"></option><option value="سيد دخيل"></option>
-                                <option value="كرمة بني سعيد"></option><option value="البطحاء"></option>
-                            </datalist>
+                            <label class="block text-xs font-bold text-stone-700 mb-1">المنطقة:</label>
+                            <input type="text" id="customer-area" placeholder="اكتب المنطقة" oninput="updateCartTotals()" class="w-full px-3.5 py-2.5 bg-white border border-pink-200 rounded-xl text-sm focus:ring-2 focus:ring-pink-600 focus:outline-none transition-all">
                         </div>
                     </div>
                 </div>
@@ -1017,7 +992,7 @@
 
         // Cloudinary: رفع الصور مباشرة من جهاز المستخدم بدون Firebase Storage
         const CLOUDINARY_CLOUD_NAME = "jfwuylur";
-        const CLOUDINARY_UPLOAD_PRESET = "athar-e00bf1";
+        const CLOUDINARY_UPLOAD_PRESET = "duaaasq12";
         const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
  
         const $ = (id) => document.getElementById(id);
@@ -1164,10 +1139,8 @@
         function getShippingFee() {
             const sel = $('customer-province');
             const province = sel.value;
-            const area = ($('customer-area')?.value || '').trim();
-            if (province === 'ذي قار') {
-                return /الشطرة|شطرة/.test(area) ? 2000 : 3000;
-            }
+            if (province === 'ذي قار') return 3000;
+            if (province === 'الشطرة') return 2000;
             return parseInt(sel.options[sel.selectedIndex]?.getAttribute('data-fee')) || 0;
         }
 
@@ -1747,7 +1720,7 @@
             const prov = $('customer-province').value;
             const area = $('customer-area').value.trim();
             if (!prov) { showCustomAlert('نقص بيانات', 'يرجى اختيار المحافظة.', true); return null; }
-            if (!name || !phone || !area) { showCustomAlert('نقص بيانات', 'يرجى إكمال بيانات العنوان والهاتف.', true); return null; }
+            if (!name || !phone || !area) { showCustomAlert('نقص بيانات', 'يرجى إكمال الاسم ورقم الهاتف وكتابة المنطقة.', true); return null; }
  
             const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
             const discount = calcDiscount(subtotal);
@@ -1764,7 +1737,7 @@
         function checkoutViaWhatsApp() {
             const text = buildOrderText(false);
             if (!text) return;
-            window.open(`https://wa.me/9647887967478?text=${encodeURIComponent(text)}`, '_blank');
+            window.open(`https://wa.me/9647823087395?text=${encodeURIComponent(text)}`, '_blank');
             deductStockForCart();
         }
 
@@ -2062,7 +2035,7 @@
                 const msg = err.message === 'cloudinary-config-missing' ? 'إعدادات Cloudinary غير موجودة في الكود.'
                     : err.message === 'image-too-large' ? 'حجم الصورة كبير جداً. الحد الأقصى 10MB.'
                     : err.message === 'invalid-image' ? 'الملف المختار ليس صورة صالحة.'
-                    : `تعذر رفع الصورة إلى Cloudinary: ${err.message || 'تحققي من الاتصال وإعدادات Upload Preset athar-e00bf1.'}`;
+                    : `تعذر رفع الصورة إلى Cloudinary: ${err.message || 'تحققي من الاتصال وإعدادات Upload Preset duaaasq12.'}`;
                 showCustomAlert('خطأ في رفع الصورة', msg, true);
             } finally {
                 uploadingSlots[idx] = false;
@@ -2286,7 +2259,7 @@
                 preview.src = '';
                 preview.classList.add('hidden');
                 status.textContent = 'تعذر رفع الصورة.';
-                showCustomAlert('خطأ في رفع الصورة', 'تعذر رفع صورة التصنيف إلى Cloudinary. تأكدي من أن Upload Preset باسم athar-e00bf1 مضبوط على Unsigned.', true);
+                showCustomAlert('خطأ في رفع الصورة', 'تعذر رفع صورة التصنيف إلى Cloudinary. تأكدي من أن Upload Preset باسم duaaasq12 مضبوط على Unsigned.', true);
             } finally {
                 URL.revokeObjectURL(localPreview);
                 imageUploadBusy = false;
@@ -2315,7 +2288,7 @@
                 preview.src = '';
                 preview.classList.add('hidden');
                 status.textContent = 'تعذر رفع الشعار.';
-                showCustomAlert('خطأ في رفع الشعار', 'تعذر رفع الشعار إلى Cloudinary. تأكدي من أن Upload Preset باسم athar-e00bf1 مضبوط على Unsigned.', true);
+                showCustomAlert('خطأ في رفع الشعار', 'تعذر رفع الشعار إلى Cloudinary. تأكدي من أن Upload Preset باسم duaaasq12 مضبوط على Unsigned.', true);
             } finally {
                 URL.revokeObjectURL(localPreview);
                 imageUploadBusy = false;
